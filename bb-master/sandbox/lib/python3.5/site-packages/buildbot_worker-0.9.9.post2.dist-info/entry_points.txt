@@ -1,0 +1,4 @@
+[console_scripts]
+buildbot-worker = buildbot_worker.scripts.runner:run
+buildbot_worker_windows_service = buildbot_worker.scripts.windows_service:HandleCommandLine
+

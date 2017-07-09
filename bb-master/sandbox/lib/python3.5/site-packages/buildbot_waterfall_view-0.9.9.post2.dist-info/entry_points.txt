@@ -1,0 +1,4 @@
+
+        [buildbot.www]
+        waterfall_view = buildbot_waterfall_view:ep
+    

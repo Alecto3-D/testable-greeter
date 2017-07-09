@@ -1,0 +1,10 @@
+#!/Users/kevin/tmp/bb-master/sandbox/bin/python3
+# EASY-INSTALL-ENTRY-SCRIPT: 'Twisted==17.5.0','console_scripts','tkconch'
+__requires__ = 'Twisted==17.5.0'
+import sys
+from pkg_resources import load_entry_point
+
+if __name__ == '__main__':
+    sys.exit(
+        load_entry_point('Twisted==17.5.0', 'console_scripts', 'tkconch')()
+    )
