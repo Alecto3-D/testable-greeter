@@ -1,0 +1,85 @@
+sudo: false
+language: python
+
+services:
+    - rabbitmq
+
+before_install:
+    - mkdir $PWD/bin
+    - wget -O $PWD/bin/toxiproxy-server https://github.com/Shopify/toxiproxy/releases/download/v2.0.0/toxiproxy-server-linux-amd64
+    - chmod +x $PWD/bin/toxiproxy-server
+    - export PATH=$PATH:$PWD/bin/
+
+addons:
+  apt_packages:
+    - libenchant-dev
+
+install:
+  - pip install tox
+
+cache:
+  directories:
+    - $HOME/.cache/pip
+
+matrix:
+  include:
+    - python: 2.7
+      env: TOX_ENV=py27-oldest-lib
+    - python: 2.7
+      env: TOX_ENV=py27-pinned-lib
+    - python: 2.7
+      env: TOX_ENV=py27-latest-lib
+    - python: 2.7
+      env: TOX_ENV=py27-mastereventlet-lib
+    - python: 2.7
+      env: TOX_ENV=py27-examples
+    - python: 3.4
+      env: TOX_ENV=py34-oldest-lib
+    - python: 3.4
+      env: TOX_ENV=py34-pinned-lib
+    - python: 3.4
+      env: TOX_ENV=py34-latest-lib
+    - python: 3.4
+      env: TOX_ENV=py34-mastereventlet-lib
+    - python: 3.5
+      env: TOX_ENV=py35-oldest-lib
+    - python: 3.5
+      env: TOX_ENV=py35-pinned-lib
+    - python: 3.5
+      env: TOX_ENV=py35-latest-lib
+    - python: 3.5
+      env: TOX_ENV=py35-mastereventlet-lib
+    - python: 3.6
+      env: TOX_ENV=py36-oldest-lib
+    - python: 3.6
+      env: TOX_ENV=py36-pinned-lib
+    - python: 3.6
+      env: TOX_ENV=py36-latest-lib
+    - python: 3.6
+      env: TOX_ENV=py36-mastereventlet-lib
+    - python: 3.6
+      env: TOX_ENV=py36-branchcoverage-lib
+    - python: 3.6
+      env: TOX_ENV=py36-examples
+    - python: 3.6
+      env: TOX_ENV=docs
+  fast_finish: true
+  allow_failures:
+    - env: TOX_ENV=py27-mastereventlet-lib
+    - env: TOX_ENV=py34-mastereventlet-lib
+    - env: TOX_ENV=py35-mastereventlet-lib
+    - env: TOX_ENV=py36-mastereventlet-lib
+    - env: TOX_ENV=py36-branchcoverage-lib
+
+script:
+  - tox -e $TOX_ENV
+
+deploy:
+  provider: pypi
+  user: onefinestay
+  password:
+    secure: Mwinp9cxGaGe/KjGFcO+T7MAgLvy5yFNeYCq9zpGniuSXsp/AFH3JIS1kWBv71tMC8S2N5kwRMVXoHNMqJt+Iq/EmYIY6vbMK8GijAUqLo8KsbxgmigWTXTn6IHKDO4gwYmQt8BDYJmbq6CNeVVCHMxWyP0Y24S25y7N35oIroU=
+  on:
+    tags: true
+    repo: nameko/nameko
+  distributions: "sdist bdist_wheel"
