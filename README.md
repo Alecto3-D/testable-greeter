@@ -29,14 +29,21 @@ cd ~/tmp/bb-master
 Assuming Python 3, because I know that short term, seemingly temporary hacks can persist for *years* (and EOL on 2.7 has been declared for 2020)
 
 python3 -m venv sandbox
+
 source sandbox/bin/activate
 
 (Assumes Bash or Zsh)
+
 pip install --upgrade pip
+
 pip install 'buildbot[bundle]'
+
 buildbot create-master master
+
 mv master/master.cfg.sample master/master.cfg
+
 and then a
+
  buildbot start master
 
  (Don't try this on an OSX box, you will experience disappointment. I ended up using an Ubuntu 16.04 box which is working out nicely)
@@ -44,22 +51,36 @@ and then a
 Building a worker:
 
 mkdir -p ~/tmp/bb-worker
+
 cd ~/tmp/bb-worker
 
 python3 -m venv sandbox
+
 source sandbox/bin/activate
+
 Install the buildbot-worker command:
+
 pip install --upgrade pip
+
 pip install buildbot-worker
+
 # required for `runtests` build
+
 pip install setuptools-trial
+
 Now, create the worker:
+
 buildbot-worker create-worker worker localhost example-worker pass
+
 Note: If you decided to create this from another computer, you should replace localhost with the name of the
 computer where your master is running.
+
 The username (example-worker), and password (pass) should be the same as those in master/master.cfg;
 verify this is the case by looking at the section for c['workers']:
+
 cat ../bb-master/master/master.cfg
+
 And finally, start the worker:
+
 buildbot-worker start worker
 
