@@ -1,13 +1,16 @@
 # testable-greeter
+
 "The team hasn't implemented any automated tests or created a mechanism for automated deployments of this service to any of the existing environments (dev, test, demo, production) yet."
 
 This looks like our first target. Getting a build pipeline going is good for morale, it allows developers to see the downstream effects. It reduces friction and distance from production.
 
 Most of the shops I've been at have a Jenkins or Bamboo installed already, but maybe there is a more lightweight solution.
 
+Is this a TDD shop? 
+
 Maybe CI is something that is best hosted outside the company, but it's in fashion to have an in-house solution: an argument can be made from a security perspective.
 
-I'm tempted to try out https://buildbot.net/, for its built in understanding of python issues, but in this scenario, I'm not sure if that would be the most useful choice for the team that has to maintain this install.
+I'm tempted to try out [https://buildbot.net/], for its built in understanding of python issues, but in this scenario, I'm not sure if that would be the most useful choice for the team that has to maintain this install.
 
 Nonetheless, I need something I can commit inside a four hour window, and buildbot seems simple enough.
 
@@ -45,6 +48,9 @@ mv master/master.cfg.sample master/master.cfg
 and then a
 
  buildbot start master
+
+(I've committed my master.cfg into the testable-greeter repo. You can reload with a buildbot reconfig  )
+
 
  (Don't try this on an OSX box, you will experience disappointment. I ended up using an Ubuntu 16.04 box which is working out nicely)
 
@@ -84,3 +90,55 @@ And finally, start the worker:
 
 buildbot-worker start worker
 
+Okay, switching over to building something like an application:
+
+Tribute goes out to [https://github.com/nameko/nameko-examples]
+
+and 
+
+[http://nameko.readthedocs.io/en/stable/built_in_extensions.html#http-get-post]
+
+
+At this point I discover that, as of Python 3, urllib2 has been split into urllib.request and urllib.error. werkzeug [http://werkzeug.pocoo.org/] 
+(A WSGI utility) has bitten me again.
+
+[https://stackoverflow.com/questions/17391289/tried-to-use-relative-imports-and-broke-my-import-paths]
+
+Also 
+
+[https://github.com/pallets/werkzeug/issues/593]
+
+Okay, trying again with python2
+
+And it works:
+
+nameko run http
+starting services: helloworld
+127.0.0.1 - - [09/Jul/2017 23:18:55] "GET /get/42 HTTP/1.1" 200 121 0.001195
+
+curl -i localhost:8000/get/42
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 13
+Date: Sun, 09 Jul 2017 23:18:55 GMT
+
+{"value": 42}
+
+But that's just for integers.
+
+ I need to do some url parsing - found an interesting library, furl. [https://github.com/gruns/furl]
+
+Interesting: [https://medium.com/@ssola/building-microservices-with-python-part-i-5240a8dcc2fb]
+
+Also interesting: 
+[http://www.skybert.net/python/developing-a-restful-micro-service-in-python/]
+
+It's 4:30, I am developing self-doubt- maybe another framework would have been better 
+
+And we're out of time. Thanks for playing folks, this is me, trying to stand up infrastructure, and code, in a hurry.
+
+I'm reminded of the quote from "The Princess Bride"
+
+*Miracle Max*: You rush a miracle man, you get rotten miracles
+
+If I could be *half* as funny as Miracle Max ...
